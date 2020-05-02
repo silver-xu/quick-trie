@@ -1,5 +1,12 @@
 import { Node, TrieConfig, SearchResult } from './types';
 
+/**
+ * Returns a new root node of the trie
+ *
+ * @typeparam T The generic type of values stored in Nodes.
+ * @param trieConfig - Configuration of the trie
+ * @returns a new root node of the trie
+ */
 export const init = <T>(
   trieConfig: TrieConfig = {
     ignoreCasing: true,
@@ -9,35 +16,26 @@ export const init = <T>(
   ignoreCasing: trieConfig.ignoreCasing,
 });
 
+/**
+ * Adding a key value pair to the trie
+ *
+ * @typeparam T The generic type of values stored in Nodes.
+ * @param node - the root node of the trie to add to
+ * @param key - the key to add to the trie
+ * @param value - the value to add to the trie
+ */
 export const add = <T>(node: Node<T>, key: string, value: T): void => {
   addRecursively(node, key, key, value);
 };
 
-const addRecursively = <T>(node: Node<T>, key: string, originalKey: string, value: T): Node<T> => {
-  if (key.length === 0) {
-    node.key = originalKey;
-    node.value = value;
-    return node;
-  }
-
-  const cultureAwareKey = getCultureAwareKey(node, key);
-
-  const matchChild = node.children[cultureAwareKey];
-  if (matchChild) {
-    return addRecursively(matchChild, key.slice(1, key.length), originalKey, value);
-  } else {
-    const newNode = {
-      parent: node,
-      children: {},
-      ignoreCasing: node.ignoreCasing,
-      key: key.length === 1 && originalKey,
-      value: key.length === 1 && value,
-    };
-    node.children[cultureAwareKey] = newNode;
-    return addRecursively(newNode, key.slice(1, key.length), originalKey, value);
-  }
-};
-
+/**
+ * Get the value from the trie by a key
+ *
+ * @typeparam T The generic type of values stored in Nodes.
+ * @param node - the root node of the trie to add to
+ * @param key - the key used to retrieve from the trie
+ * @returns - the value if key exists, undefine if not
+ */
 export const get = <T>(node: Node<T>, key: string): T | undefined => {
   if (key.length === 0) {
     return node.value;
@@ -51,6 +49,14 @@ export const get = <T>(node: Node<T>, key: string): T | undefined => {
   }
 };
 
+/**
+ * Search the value from the trie by a keyword
+ *
+ * @typeparam T The generic type of values stored in Nodes.
+ * @param node - the root node of the trie to add to
+ * @param keyword - the keyword used to search from the trie
+ * @returns - the search result with their corresponding keys
+ */
 export const search = <T>(node: Node<T>, keyword: string): SearchResult<T>[] =>
   searchRecursively(node, keyword, keyword).map(({ key, value }) => ({ key, value }));
 
@@ -83,6 +89,31 @@ const searchRecursively = <T>(
   }
 
   return results;
+};
+
+const addRecursively = <T>(node: Node<T>, key: string, originalKey: string, value: T): Node<T> => {
+  if (key.length === 0) {
+    node.key = originalKey;
+    node.value = value;
+    return node;
+  }
+
+  const cultureAwareKey = getCultureAwareKey(node, key);
+
+  const matchChild = node.children[cultureAwareKey];
+  if (matchChild) {
+    return addRecursively(matchChild, key.slice(1, key.length), originalKey, value);
+  } else {
+    const newNode = {
+      parent: node,
+      children: {},
+      ignoreCasing: node.ignoreCasing,
+      key: key.length === 1 && originalKey,
+      value: key.length === 1 && value,
+    };
+    node.children[cultureAwareKey] = newNode;
+    return addRecursively(newNode, key.slice(1, key.length), originalKey, value);
+  }
 };
 
 const applyStartWildcard = <T>(

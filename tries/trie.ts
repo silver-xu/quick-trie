@@ -15,6 +15,8 @@ export const add = <T>(node: Node<T>, key: string, value: T): void => {
 
 const addRecursively = <T>(node: Node<T>, key: string, originalKey: string, value: T): Node<T> => {
   if (key.length === 0) {
+    node.key = originalKey;
+    node.value = value;
     return node;
   }
 
@@ -104,11 +106,11 @@ const applyEndWildcard = <T>(node: Node<T>): SearchResult<T>[] => {
   if (node.value) {
     const { key, value } = node;
     fetchResult.push({ key, value });
-  } else {
-    Object.values(node.children).forEach((child) => {
-      fetchResult = fetchResult.concat(applyEndWildcard(child));
-    });
   }
+
+  Object.values(node.children).forEach((child) => {
+    fetchResult = fetchResult.concat(applyEndWildcard(child));
+  });
 
   return fetchResult;
 };

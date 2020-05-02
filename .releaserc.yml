@@ -1,4 +1,4 @@
-repositoryUrl: git@github.com:silver-xu/ts-module-boilerplate.git
+repositoryUrl: git@github.com:silver-xu/quick-trie.git
 plugins:
   - '@semantic-release/commit-analyzer'
   - '@semantic-release/release-notes-generator'

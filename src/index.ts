@@ -1,3 +1,7 @@
-export const greet = (name: string): string => `Hi ${name}!`;
+import { addToTrie, initTrie, getFromTrie, searchInTrie } from './tries/trie';
 
-console.log(greet('World'));
+const trie = initTrie<number>();
+
+addToTrie(trie, 'Hello World', 1);
+
+console.log(searchInTrie(trie, 'lr'));

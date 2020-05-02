@@ -41,7 +41,7 @@ describe('trie tests', () => {
     expect(barfoo).toBeUndefined();
   });
 
-  it('search() should retrieve correct nodes by keyword', () => {
+  it('search() should retrieve correct nodes by keyword 1', () => {
     const root = init<number>();
     add(root, 'Hello World', 1);
     add(root, 'World Best', 2);
@@ -71,6 +71,19 @@ describe('trie tests', () => {
         { key: 'World Best', value: 2 },
       ].sort(),
     );
+  });
+
+  it('search() should retrieve correct nodes by keyword 2', () => {
+    const root = init<number>();
+    add(root, 'Hello World', 1);
+    add(root, 'Hello', 2);
+
+    const hello = search(root, 'hello');
+
+    expect(hello).toEqual([
+      { key: 'Hello', value: 2 },
+      { key: 'Hello World', value: 1 },
+    ]);
   });
 
   it('When ignoreCasing is set to false key in wrong casing should match nothing', () => {

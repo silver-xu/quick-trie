@@ -54,12 +54,23 @@ describe('trie tests', () => {
     const lr = search(root, 'lr');
     const be = search(root, 'be');
 
-    expect(hello).toEqual([1]);
-    expect(world.sort()).toEqual([1, 2].sort());
-    expect(lo).toEqual([1]);
-    expect(rl.sort()).toEqual([1, 2].sort());
+    expect(hello).toEqual([{ key: 'Hello World', value: 1 }]);
+    expect(world).toEqual([
+      { key: 'World Best', value: 2 },
+      { key: 'Hello World', value: 1 },
+    ]);
+    expect(lo).toEqual([{ key: 'Hello World', value: 1 }]);
+    expect(rl).toEqual([
+      { key: 'Hello World', value: 1 },
+      { key: 'World Best', value: 2 },
+    ]);
     expect(lr).toEqual([]);
-    expect(be.sort()).toEqual([2, 3].sort());
+    expect(be.sort()).toEqual(
+      [
+        { key: 'Beer', value: 3 },
+        { key: 'World Best', value: 2 },
+      ].sort(),
+    );
   });
 
   it('When ignoreCasing is set to false key in wrong casing should match nothing', () => {

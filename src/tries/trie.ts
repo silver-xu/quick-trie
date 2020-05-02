@@ -14,7 +14,7 @@ export const add = <T>(node: Node<T>, key: string, value: T): Node<T> => {
     return node;
   }
 
-  const cultureAwareKey = getInvariantKey(node, key);
+  const cultureAwareKey = getCultureAwareKey(node, key);
 
   const matchChild = node.children[cultureAwareKey];
   if (matchChild) {
@@ -36,7 +36,7 @@ export const get = <T>(node: Node<T>, key: string): T | undefined => {
     return node.value;
   }
 
-  const cultureAwareKey = getInvariantKey(node, key);
+  const cultureAwareKey = getCultureAwareKey(node, key);
 
   const matchChild = node.children[cultureAwareKey];
   if (matchChild) {
@@ -50,15 +50,17 @@ export const search = <T>(node: Node<T>, keyword: string): T[] =>
 const searchRecursively = <T>(node: Node<T>, keyword: string, originalKeyword: string): T[] => {
   let results = [];
 
+  // when keyword has all been matched, recursively look for values at
+  // end nodes
   if (keyword.length === 0) {
     return applyEndWildcard(node);
   }
 
-  const cultureAwareKeyword = getInvariantKey(node, keyword);
+  const cultureAwareKeyword = getCultureAwareKey(node, keyword);
 
   const matchChild = node.children[cultureAwareKeyword];
   if (matchChild) {
-    let result = matchNext(matchChild, keyword, originalKeyword);
+    const result = matchNext(matchChild, keyword, originalKeyword);
     results = results.concat(result);
   }
 
@@ -70,6 +72,21 @@ const searchRecursively = <T>(node: Node<T>, keyword: string, originalKeyword: s
   }
 
   return results;
+};
+
+const applyStartWildcard = <T>(
+  node: Node<T>,
+  cultureAwareKeyword: string,
+  keyword: string,
+  originalKeyword: string,
+): T[] => {
+  const childrenResults = Object.entries(node.children)
+    .map(([key, child]) =>
+      key !== cultureAwareKeyword ? searchRecursively(child, keyword, originalKeyword) : [],
+    )
+    .flat();
+
+  return childrenResults;
 };
 
 const applyEndWildcard = <T>(node: Node<T>): T[] => {
@@ -86,10 +103,10 @@ const applyEndWildcard = <T>(node: Node<T>): T[] => {
   return fetchResult;
 };
 
-const getInvariantKey = <T>(node: Node<T>, key: string) =>
+const getCultureAwareKey = <T>(node: Node<T>, key: string): string =>
   node.ignoreCasing ? key[0].toLowerCase() : key[0];
 
-const matchNext = <T>(matchChild: Node<T>, keyword: string, originalKeyword: string) => {
+const matchNext = <T>(matchChild: Node<T>, keyword: string, originalKeyword: string): T[] => {
   let result = searchRecursively(matchChild, keyword.slice(1, keyword.length), originalKeyword);
 
   // will need to step back one character when the path does not return anything
@@ -99,19 +116,4 @@ const matchNext = <T>(matchChild: Node<T>, keyword: string, originalKeyword: str
   }
 
   return result;
-};
-
-const applyStartWildcard = <T>(
-  node: Node<T>,
-  cultureAwareKeyword: string,
-  keyword: string,
-  originalKeyword: string,
-) => {
-  const childrenResults = Object.entries(node.children)
-    .map(([key, child]) =>
-      key !== cultureAwareKeyword ? searchRecursively(child, keyword, originalKeyword) : [],
-    )
-    .flat();
-
-  return childrenResults;
 };

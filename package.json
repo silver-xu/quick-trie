@@ -1,6 +1,6 @@
 {
-  "name": "ts-module-boilerplate",
-  "description": "Typescript npm module boilerplate",
+  "name": "quick-trie",
+  "description": "Trie implementation for node and js projects",
   "main": "dist/index.js",
   "scripts": {
     "start": "yarn build && node dist/index",

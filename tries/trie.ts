@@ -9,8 +9,9 @@ export const init = <T>(
   ignoreCasing: trieConfig.ignoreCasing,
 });
 
-export const add = <T>(node: Node<T>, key: string, value: T) =>
+export const add = <T>(node: Node<T>, key: string, value: T): void => {
   addRecursively(node, key, key, value);
+};
 
 const addRecursively = <T>(node: Node<T>, key: string, originalKey: string, value: T): Node<T> => {
   if (key.length === 0) {

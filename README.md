@@ -1,6 +1,6 @@
-**# TS Module Boilerplate [![Build Status](https://travis-ci.org/silver-xu/trie.svg?branch=master)](https://travis-ci.org/silver-xu/trie) [![codecov](https://codecov.io/gh/silver-xu/trie/branch/master/graph/badge.svg)](https://codecov.io/gh/silver-xu/trie)**
+**# Quick Trie [![Build Status](https://travis-ci.org/silver-xu/trie.svg?branch=master)](https://travis-ci.org/silver-xu/quick-trie) [![codecov](https://codecov.io/gh/silver-xu/trie/branch/master/graph/badge.svg)](https://codecov.io/gh/silver-xu/quick-trie)**
 
-\> Trie implementation for node and js projects
+> Trie implementation for node and js projects
 
 ## Trie
 

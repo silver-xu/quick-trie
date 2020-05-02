@@ -5,8 +5,8 @@
   "scripts": {
     "start": "yarn build && node dist/index",
     "build": "tsc",
-    "lint": "eslint src/**/*.ts",
-    "format": "eslint src/**/*.ts --fix",
+    "lint": "eslint **/*.ts",
+    "format": "eslint **/*.ts --fix",
     "test": "jest",
     "codecov": "codecov",
     "semantic-release": "semantic-release"
